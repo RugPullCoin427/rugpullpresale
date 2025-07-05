@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>RugPullCoin Presale</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+      }
+
+      .container {
+        background: white;
+        border-radius: 8px;
+        padding: 30px;
+        max-width: 600px;
+        margin: 0 auto;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      input[type="number"] {
+        padding: 10px;
+        width: 80%;
+        margin: 10px 0;
+        font-size: 16px;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background: #ff9900;
+        border: none;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .socials a {
+        margin: 0 10px;
+        font-size: 20px;
+      }
+
+      .note {
+        font-size: 14px;
+        color: #555;
+        margin-top: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>🚀 RugPullCoin Presale is LIVE!</h2>
+      <p><strong>Price:</strong> 1 BNB = 2,000,000 RUG</p>
+      <p><strong>Min:</strong> $10 | <strong>Max:</strong> $2000</p>
+
+      <input
+        type="number"
+        id="bnbInput"
+        placeholder="Enter BNB amount"
+        oninput="updateTokenAmount()" />
+
+      <p id="tokenAmount">You'll get: 0 RUG</p>
+
+      <button onclick="connectWallet()">Connect Wallet</button>
+      <button onclick="buyRUG()">Buy RUG</button>
+
+      <div class="note">
+        To see $RUG in your wallet, import token:<br />
+        <code>0xc233dC506188cE136c014E44Fd2C3030F586b138</code>
+      </div>
+
+      <div class="socials">
+        <a href="https://x.com/rugcoin_pull" target="_blank">🐦 Twitter</a>
+        <a href="https://t.me/+5b3iHWLVzGtiZTli" target="_blank">💬 Telegram</a>
+      </div>
+    </div>
+
+    <script>
+      function updateTokenAmount() {
+        const bnb = parseFloat(document.getElementById("bnbInput").value);
+        const rugPerBNB = 2000000;
+        const rug = isNaN(bnb) ? 0 : bnb * rugPerBNB;
+        document.getElementById("tokenAmount").innerText = `You'll get: ${rug.toLocaleString()} RUG`;
+      }
+
+      function connectWallet() {
+        alert("Wallet connection coming soon!");
+      }
+
+      function buyRUG() {
+        alert("Buy functionality will be enabled when connected to smart contract.");
+      }
+    </script>
+  </body>
+</html>
