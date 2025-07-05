@@ -4,96 +4,108 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>RugPullCoin Presale</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f8f8f8;
+      background: #f7f7f7;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
       margin: 0;
     }
     .container {
-      background: white;
+      background: #fff;
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
       text-align: center;
-      max-width: 400px;
       width: 90%;
+      max-width: 400px;
     }
-    input {
+    input, button {
       width: 100%;
       padding: 12px;
-      margin-top: 10px;
-      border-radius: 6px;
+      margin: 10px 0;
+      border-radius: 8px;
       border: 1px solid #ccc;
     }
     button {
-      padding: 12px 20px;
-      margin: 10px 5px;
-      border: none;
-      border-radius: 6px;
-      background-color: orange;
+      background-color: #ff6b00;
       color: white;
       font-weight: bold;
+      border: none;
       cursor: pointer;
     }
-    .social {
-      margin-top: 15px;
-    }
-    .social a {
-      margin: 0 10px;
-      text-decoration: none;
-      color: #0077cc;
-    }
     .info {
+      margin-top: 15px;
       font-size: 0.9em;
       color: #555;
-      margin-top: 15px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>🚀 RugPullCoin Presale is LIVE!</h2>
-    <p><strong>Price:</strong> 1 BNB = 1,310,000 RUG</p>
-    <p><strong>Min:</strong> $10 | <strong>Max:</strong> $2000</p>
-
-    <input id="bnbInput" type="number" placeholder="Enter BNB amount" step="0.01" min="0" />
+    <h2>🚀 RugPullCoin Presale</h2>
+    <p><strong>1 BNB = 1,310,000 RUG</strong></p>
+    <input type="number" id="bnbInput" placeholder="Enter BNB amount" />
     <p id="rugOutput">You'll get: 0 RUG</p>
-
     <button onclick="connectWallet()">Connect Wallet</button>
-    <button onclick="buyRug()">Buy RUG</button>
-
+    <button onclick="buyTokens()">Buy RUG</button>
     <div class="info">
-      To see $RUG in your wallet, import token:<br/>
-      <strong>0xc233dC506188cE136c014E44Fd2C3030F586b138</strong>
-    </div>
-
-    <div class="social">
-      <a href="https://x.com/rugcoin_pull?s=21" target="_blank">🐦 Twitter</a>
-      <a href="https://t.me/+5b3iHWLVzGtiZTli" target="_blank">💬 Telegram</a>
+      Import this token to see it in your wallet:<br>
+      <code>0xc233dC506188cE136c014E44Fd2C3030F586b138</code>
     </div>
   </div>
 
   <script>
+    let signer;
+    const contractAddress = "0xd02F33B280B2b2a8813d0a06fa558d179944086c";
+    const abi = [
+      {
+        "inputs": [],
+        "name": "buyTokens",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+      }
+    ];
+
     const tokensPerBNB = 1310000;
 
     document.getElementById("bnbInput").addEventListener("input", function () {
-      const bnbAmount = parseFloat(this.value) || 0;
-      const rugAmount = bnbAmount * tokensPerBNB;
-      document.getElementById("rugOutput").innerText = `You'll get: ${rugAmount.toLocaleString()} RUG`;
+      const bnb = parseFloat(this.value) || 0;
+      const rug = bnb * tokensPerBNB;
+      document.getElementById("rugOutput").innerText = `You'll get: ${rug.toLocaleString()} RUG`;
     });
 
-    function connectWallet() {
-      alert("Wallet connection not implemented in this mockup. Replace this with Web3 wallet connect logic.");
+    async function connectWallet() {
+      if (typeof window.ethereum !== "undefined") {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        signer = await provider.getSigner();
+        alert("Wallet connected");
+      } else {
+        alert("Please install MetaMask.");
+      }
     }
 
-    function buyRug() {
-      alert("Buy function not implemented in this mockup. Replace this with smart contract interaction.");
+    async function buyTokens() {
+      if (!signer) {
+        alert("Please connect your wallet first.");
+        return;
+      }
+
+      const bnbAmount = parseFloat(document.getElementById("bnbInput").value);
+      if (isNaN(bnbAmount) || bnbAmount <= 0) {
+        alert("Enter a valid BNB amount.");
+        return;
+      }
+
+      const contract = new ethers.Contract(contractAddress, abi, signer);
+      const tx = await contract.buyTokens({ value: ethers.parseEther(bnbAmount.toString()) });
+      alert("Transaction sent! TX Hash:\n" + tx.hash);
     }
   </script>
 </body>
